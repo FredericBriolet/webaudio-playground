@@ -21,8 +21,10 @@ let rendererOptions = {
 
 // --- UI ---
 
-var menu = document.querySelector('.menu-burger');
-var controls = document.querySelector('.controls');
+const menu = document.querySelector('.menu-burger');
+const controls = document.querySelector('.controls');
+const statsContainer = document.querySelector('.stats-container');
+
 menu.addEventListener('click', function(){
 	this.classList.toggle('menu-burger--is-active');
 	controls.classList.toggle('visible');
@@ -47,7 +49,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild( renderer.domElement );
 
 var stats = new Stats();
-document.body.appendChild( stats.dom );
+statsContainer.appendChild( stats.dom );
 
 var orbit = new THREE.OrbitControls( camera, renderer.domElement );
 
@@ -198,12 +200,16 @@ function createRandomNote() {
 // --- meshes ---
 
 // plane
-let geometry = new THREE.PlaneGeometry( 160, 50, 32 );
+let geometry = new THREE.PlaneGeometry( 1, 45, 32 );
 let material = new THREE.MeshLambertMaterial( {color: 0xF1F1F1, side: THREE.DoubleSide} );
 var plane = new THREE.Mesh( geometry, material );
 plane.receiveShadow = true;
 plane.rotation.x = Math.PI/2;
 plane.position.y = -0.5;
+plane.position.z = -7;
+
+plane.scale.x = synthOptions.numberOfNotes * 2.5;
+
 scene.add( plane );
 
 var colors = [
@@ -472,6 +478,8 @@ numbersOfNotesController.onChange(function(value) {
 	createsCubes();
 	createPattern(notes);
 
+	plane.scale.x = synthOptions.numberOfNotes * 2.5;
+
 	const newBpm = Math.min(350, parseInt( synthOptions.numberOfNotes * 13 ));
 	synthOptions.bpm = newBpm;
 	Tone.Transport.bpm.value = newBpm;
@@ -510,7 +518,20 @@ function updateSynth() {
 	createMainTheme();
 }
 
+
+function toggleSynthGui(shouldPlay) {
+	const parentNode = isPlayingController.domElement.closest('li.cr').parentNode;
+	const nextLiList = parentNode.querySelectorAll('li.cr');
+
+	for(let i = 1; i < nextLiList.length; i++) {
+		nextLiList[i].classList.toggle('disabled', !shouldPlay);
+	}
+}
+
 function toggleSynth(shouldPlay) {
+
+	toggleSynthGui(shouldPlay);
+
 	if (shouldPlay) {
 		createMainTheme();
 	} else {
@@ -519,8 +540,8 @@ function toggleSynth(shouldPlay) {
 
 }
 
-
 synthFolder.open()
+toggleSynthGui();
 
 // scene folder
 
