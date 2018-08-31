@@ -1,0 +1,202 @@
+::-moz-selection {
+	background-color: #000099;
+	color: #fff;
+}
+
+/* Works in Safari */
+::selection {
+	background-color: #000099;
+	color: #fff;
+}
+
+body {
+	background-color: #000022;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	text-align: center;
+	font-family: Courier New, Courier, Helevetica Neue, Helevetica, Arial;
+	color: #fff;
+}
+
+.menu{
+	position: absolute;
+	display: block;
+	left: 15px;
+	top: 10px;
+	display: block;
+	margin: 0px 0px 0px 0px;
+	padding: 10px 10px 10px 10px;
+	cursor: pointer;
+	z-index: 1;
+}
+
+.controls {
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 30px 20px 50px 20px;
+	max-width: 200px;
+	text-align: left;
+	opacity: 0;
+	background-color: rgba(0,0,34, 0.5);
+	border-right: 2px solid #000022;
+	border-bottom: 2px solid #000022;
+	transition: opacity 0.3s ease-in-out;
+	transform: translateX(-100%);
+}
+
+.controls.visible {
+	opacity: 1;
+	transform: translateX(0);
+}
+
+.controls h1{
+	font-weight: 400;
+}
+
+.controls button{
+	display: block;
+	text-align: center;
+	text-transform: uppercase;
+	font-family: Courier New, Courier, Helevetica Neue, Helevetica, Arial;
+	-webkit-appearance: none;
+	appearance: none;
+	background-color: #000022;
+	border: 2px solid #fff;
+	width: 100%;
+	padding: 10px 15px;
+	margin: 30px auto;
+	color: #fff;
+	cursor: pointer;
+	position: relative;
+}
+
+.controls button:focus, .controls button:active{
+	outline: none;
+}
+
+.controls button:hover{
+	top: 1px;
+	left: 1px;
+}
+
+.menu-burger{
+	width: 20px;
+	height: 14px;
+	position: absolute;
+	margin: -7px 0 0 -10px;
+	background-color: transparent;
+	border: none;
+	-webkit-tap-highlight-color: #fff;
+	transition: 0.2s;
+	transition-delay: 0.15s;
+	outline: none;
+	cursor: pointer;
+}
+
+.menu-burger i{
+	display: block;
+	text-indent: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	height: 2px;
+	background-color: #fff;
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	transition: 0.3s;
+	-webkit-transition: 0.3s;
+	-moz-transition: 0.3s;
+	-o-transition: 0.3s;
+	transition-delay: 0.2s;
+	-webkit-transition-delay: 0.2s;
+	-moz-transition-delay: 0.2s;
+	-o-transition-delay: 0.2s;
+	transition-delay: 0.2s;
+}
+
+.menu-burger span{
+	content: '';
+	position: absolute;
+	top: 0;
+	height: 0;
+	border-bottom-style: solid;
+	border-bottom-width: 2px;
+	border-bottom-color: #fff;
+	width: 100%;
+	left: 0;
+	right: 0;
+	-webkit-transition: .5s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+	-moz-transition: .5s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+	-o-transition: .5s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+	transition: .5s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+	transform-origin: right bottom;
+	-moz-transform-origin: right bottom;
+	-webkit-transform-origin: right bottom;
+	-o-transform-origin: right bottom;
+	-ms-transform-origin: right bottom;
+}
+
+.menu-burger span:last-child{
+	top: 100%;
+	transform-origin: right bottom;
+	-moz-transform-origin: right bottom;
+	-webkit-transform-origin: right bottom;
+	-o-transform-origin: right bottom;
+	-ms-transform-origin: right bottom;
+}
+
+.menu-burger--is-active{
+	transform: translate3d(0, 0, 0);
+	-moz-transform: translate3d(0, 0, 0);
+	-webkit-transform: translate3d(0, 0, 0);
+	-o-transform: translate3d(0, 0, 0);
+	-ms-transform: translate3d(0, 0, 0);
+	transition-delay: 0.2s;
+	-webkit-transition-delay: 0.2s;
+	-moz-transition-delay: 0.2s;
+	-o-transition-delay: 0.2s;
+	transition-delay: 0.2s;
+}
+
+.menu-burger--is-active span{
+	border-bottom-color: #fff;
+}
+
+.menu-burger--is-active i{
+	opacity: 0;
+	transition-delay: 0;
+	-webkit-transition-delay: 0;
+	-moz-transition-delay: 0;
+	-o-transition-delay: 0;
+	transition-delay: 0;
+}
+
+.menu-burger--is-active span:last-child{
+	transform: rotate3d(0, 0, 1, 45deg) translate3d(-1px, 1px, 0);
+	-moz-transform: rotate3d(0, 0, 1, 45deg) translate3d(-1px, 1px, 0);
+	-webkit-transform: rotate3d(0, 0, 1, 45deg) translate3d(-1px, 1px, 0);
+	-o-transform: rotate3d(0, 0, 1, 45deg) translate3d(-1px, 1px, 0);
+	-ms-transform: rotate3d(0, 0, 1, 45deg) translate3d(-1px, 1px, 0);
+}
+
+.menu-burger--is-active span:first-child{
+	transform: rotate3d(0, 0, 1, -45deg) translate3d(0, 0, 0);
+	-moz-transform: rotate3d(0, 0, 1, -45deg) translate3d(0, 0, 0);
+	-webkit-transform: rotate3d(0, 0, 1, -45deg) translate3d(0, 0, 0);
+	-o-transform: rotate3d(0, 0, 1, -45deg) translate3d(0, 0, 0);
+	-ms-transform: rotate3d(0, 0, 1, -45deg) translate3d(0, 0, 0);
+}
+
+.controls .toggleRectangle .toggleRectangle__remove, .controls .pause .pause__play {
+	display: none;
+}
+
+.controls .toggleRectangle.remove .toggleRectangle__remove, .controls .pause.paused .pause__play {
+	display: block;
+}
+.controls .toggleRectangle.remove .toggleRectangle__add, .controls .pause.paused .pause__pause {
+	display: none;
+}
