@@ -5,4 +5,4 @@ Experiments with Three.js and Tone.js
 
 
 Versions available here :
-http://fredericbriolet.com/tone
+http://fredericbriolet.com/webaudio-playground
