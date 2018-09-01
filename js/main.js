@@ -98,86 +98,86 @@ const keyboardNotes = getKeyboardCodes();
 function getKeyboardCodes() {
 	if (rendererOptions.keyboard === 'azerty') {
 		return {
-			'65': {
+			' 65': {
 				note: keyboardNotesArray[0],
 				isPlaying: false
 			},
-			'90': {
+			' 90': {
 				note: keyboardNotesArray[1],
 				isPlaying: false
 			},
-			'69': {
+			' 69': {
 				note: keyboardNotesArray[2],
 				isPlaying: false
 			},
-			'82': {
+			' 82': {
 				note: keyboardNotesArray[3],
 				isPlaying: false
 			},
-			'84': {
+			' 84': {
 				note: keyboardNotesArray[4],
 				isPlaying: false
 			},
-			'89': {
+			' 89': {
 				note: keyboardNotesArray[5],
 				isPlaying: false
 			},
-			'85': {
+			' 85': {
 				note: keyboardNotesArray[6],
 				isPlaying: false
 			},
-			'73': {
+			' 73': {
 				note: keyboardNotesArray[7],
 				isPlaying: false
 			},
-			'79': {
+			' 79': {
 				note: keyboardNotesArray[8],
 				isPlaying: false
 			},
-			'80': {
+			' 80': {
 				note: keyboardNotesArray[9],
 				isPlaying: false
 			},
 		}
 	} else {
 		return {
-			'81': {
+			' 81': {
 				note: keyboardNotesArray[0],
 				isPlaying: false
 			},
-			'87': {
+			' 87': {
 				note: keyboardNotesArray[1],
 				isPlaying: false
 			},
-			'69': {
+			' 69': {
 				note: keyboardNotesArray[2],
 				isPlaying: false
 			},
-			'82': {
+			' 82': {
 				note: keyboardNotesArray[3],
 				isPlaying: false
 			},
-			'84': {
+			' 84': {
 				note: keyboardNotesArray[4],
 				isPlaying: false
 			},
-			'89': {
+			' 89': {
 				note: keyboardNotesArray[5],
 				isPlaying: false
 			},
-			'85': {
+			' 85': {
 				note: keyboardNotesArray[6],
 				isPlaying: false
 			},
-			'73': {
+			' 73': {
 				note: keyboardNotesArray[7],
 				isPlaying: false
 			},
-			'79': {
+			' 79': {
 				note: keyboardNotesArray[8],
 				isPlaying: false
 			},
-			'80': {
+			' 80': {
 				note: keyboardNotesArray[9],
 				isPlaying: false
 			},
@@ -190,11 +190,7 @@ function createRandomNote() {
 	const number = numbers[Math.floor(Math.random()*numbers.length)];
 
 	const note = `${letter}${number}`;
-	// if (!debug && notes.includes(note) ) {
-		// return createRandomNote();
-	// } else {
-		return note;
-	// }
+	return note;
 }
 
 // --- meshes ---
@@ -239,9 +235,10 @@ let dimensions = {x: 1, y: 1, z: 5};
 geometry = new THREE.BoxGeometry( dimensions.x, dimensions.y, dimensions.z );
 // material = new THREE.MeshStandardMaterial()
 
-createsCubes();
+createCubes();
+createInstrumentCubes();
 
-function createsCubes() {
+function createCubes() {
 	const offsets = {x: 2, y: 0, z: 0}
 	const middleX = (offsets.x * (notes.length - 1)) / 2
 	let item = positionX = positionZ = positionY = note = null
@@ -249,12 +246,11 @@ function createsCubes() {
 	for (let i = 0, l = notes.length; i < l; i++) {
 
 		note = notes[ i ]
-		positionX = (i * offsets.x) - middleX
-
+		
 		const letter = note.slice(0, -1);
 		const number = parseInt(note.substr(1));
-
-
+		
+		positionX = (i * offsets.x) - middleX
 		positionZ = (-number * 7 - lettersInNumbers[letter] ) + 24;
 		positionY = 0;
 		// console.log({note, number, letter, positionZ})
@@ -274,6 +270,49 @@ function createsCubes() {
 		items.push(item);
 
 		scene.add( item.mesh );
+	}
+}
+
+function createInstrumentCubes() {
+	const offsets = {x: 2, y: 0, z: 0}
+	console.log(Object.keys(keyboardNotes).length);
+	const middleX = offsets.x * (Object.keys(keyboardNotes).length - 1) / 2;
+	let item = positionX = positionZ = positionY = note = null
+
+	console.log(keyboardNotes);
+
+	let index = 0;
+
+	for (let key in keyboardNotes) {
+		let keyboardNote = keyboardNotes[key];
+
+		console.log(keyboardNote);
+		note = keyboardNote.note;
+		
+		const letter = note.slice(0, -1);
+		const number = parseInt(note.substr(1));
+		
+		positionX = (index * offsets.x) - middleX;
+		positionZ = 10;
+		positionY = 0;
+
+		material = materials[ Math.floor(Math.random()*materials.length) ]
+		// material = new THREE.MeshStandardMaterial({color: 0xff0000});
+
+		item = new Item({
+			geometry,
+			material,
+			note,
+			position: { x: positionX, y: positionY, z: positionZ },
+			color: material.color
+		});
+
+		// items[ note ] = item;
+		keyboardNote.item = item;
+
+		scene.add( item.mesh );
+
+		index++;
 	}
 }
 
@@ -419,18 +458,20 @@ keyboardSynth.set({
 
 
 document.addEventListener('keydown', (event) => {
-	const key = keyboardNotes[ event.keyCode ];
+	const key = keyboardNotes[ ' ' + event.keyCode ];
 	if (key && !key.isPlaying) {
 		keyboardSynth.triggerAttack(key.note);
 		key.isPlaying = true;
+		key.item.keydown();
 	}
 })
 
 document.addEventListener('keyup', (event) => {
-	const key = keyboardNotes[ event.keyCode ];
+	const key = keyboardNotes[ ' ' + event.keyCode ];
 	if (key && key.isPlaying) {
 		keyboardSynth.triggerRelease(key.note);
 		key.isPlaying = false;
+		key.item.keyup();
 	}
 })
 
@@ -475,7 +516,7 @@ numbersOfNotesController.onChange(function(value) {
 	for (let i = 0, l = synthOptions.numberOfNotes; i < l; i++) {
 		notes.push( createRandomNote() );
 	}
-	createsCubes();
+	createCubes();
 	createPattern(notes);
 
 	plane.scale.x = synthOptions.numberOfNotes * 2.5;

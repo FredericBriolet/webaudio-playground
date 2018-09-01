@@ -31,8 +31,8 @@ class Item {
 
 	play() {
 		// return;
-		this._tweens.positionIn = TweenMax.to(this.mesh.position, this.animation.durationIn, {y: "+=2", ease: this.animation.easeIn})
-		this._tweens.positionOut = TweenMax.to(this.mesh.position, this.animation.durationOut, {y: "-=2", delay: this.animation.durationIn, ease: this.animation.easeOut})
+		this._tweens.positionIn = TweenMax.to(this.mesh.position, this.animation.durationIn, {y: 2, ease: this.animation.easeIn})
+		this._tweens.positionOut = TweenMax.to(this.mesh.position, this.animation.durationOut, {y: 0, delay: this.animation.durationIn, ease: this.animation.easeOut})
 
 		// this._tweens.scaleIn = TweenMax.to(this.mesh.scale, this.animation.durationIn, {x: 1.2, y: 1.2, z: 1.2, ease: this.animation.easeIn})
 		// this._tweens.scaleOut = TweenMax.to(this.mesh.scale, this.animation.durationOut, {x: 1, y: 1, z: 1, delay: this.animation.durationIn, ease: this.animation.easeOut})
@@ -48,6 +48,28 @@ class Item {
 			this.animation.durationOut,
 			{z: Math.PI/2, delay: this.animation.durationIn, ease: this.animation.easeOut},
 			{z: Math.PI, delay: this.animation.durationIn, ease: this.animation.easeOut}
+		);
+	}
+
+	keydown() {
+		this._tweens.positionIn = TweenMax.to(this.mesh.position, this.animation.durationIn, {y: 2, ease: this.animation.easeIn})
+
+		this._tweens.rotationIn = TweenMax.fromTo(
+			this.mesh.rotation,
+			this.animation.durationIn,
+			{z: 0, ease: this.animation.easeIn},
+			{z: Math.PI/2, ease: this.animation.easeIn}
+		);
+	}
+
+	keyup() {
+		this._tweens.positionOut = TweenMax.to(this.mesh.position, this.animation.durationOut, {y: 0, ease: this.animation.easeOut})
+
+		this._tweens.rotationOut = TweenMax.fromTo(
+			this.mesh.rotation,
+			this.animation.durationOut,
+			{z: Math.PI/2, ease: this.animation.easeOut},
+			{z: Math.PI, ease: this.animation.easeOut}
 		);
 	}
 
