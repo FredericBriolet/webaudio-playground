@@ -1,10 +1,11 @@
 const debug = false;
 
 let synthOptions = {
+	oscillatorType: 'pwm',
 	reverb: 6,
 	bpm: 160,
-	numberOfNotes: 12,
-	beat: false,
+	numberOfNotes: 8,
+	beat: true,
 	attack: 0.1,
 	decay: 0.2,
 	sustain: 0.0,
@@ -12,12 +13,27 @@ let synthOptions = {
 	isPlaying: false
 }
 
-synthOptions.bpm = Math.min(350, parseInt( synthOptions.numberOfNotes * 13 ));
+const bpmMultiplier = 25;
+synthOptions.bpm = Math.min(350, parseInt( synthOptions.numberOfNotes * bpmMultiplier ));
 
 let rendererOptions = {
 	enabled: true,
 	keyboard: 'azerty'
 }
+
+const oscillatorTypes = [
+	'pwm',
+	'fatsine',
+	'amsine',
+	'fmsine',
+	'pulse',
+	'sine', 'sine1', 'sine2', 'sine3', 'sine8', 
+	'sawtooth', 'sawtooth1', 'sawtooth2', 'sawtooth3', 'sawtooth8',
+	'triangle', 'triangle1', 'triangle2', 'triangle3', 'triangle8',
+	'square', 'square1', 'square2', 'square3', 'square8',
+	// 'fat', 'fat1', 'fat2', 'fat3', 'fat8',
+	// 'fm', 'fm1', 'fm2', 'fm3', 'fm8',
+];
 
 // --- UI ---
 
@@ -60,6 +76,10 @@ scene.add( directionalLight );
 
 // var light = new THREE.AmbientLight( 0xffffff ); // soft white light
 // scene.add( light );
+
+// physics
+const world = new CANNON.World();
+world.gravity.set(0, 0, -9.82); // m/s²
 
 
 // --- notes ---
@@ -338,8 +358,8 @@ let beatSynth = null;
 let beatLoop = null;
 
 function createMainTheme() {
-	osc = new Tone.OmniOscillator();
-	osc.frequency.value = "C4";
+	osc = new Tone.OmniOscillator('C4', synthOptions.oscillatorType);
+	// osc.frequency.value = "C4";
 	osc.volume.value = -6;
 	// osc.connect(tremolo);
 
@@ -415,6 +435,36 @@ function createBeat() {
 	beatLoop.start(0);
 }
 
+function resetMainTheme() {
+	// remove
+	notes = [];
+	pattern.stop();
+	for (let i = 0, l = items.length; i < l; i++) {
+		items[ i ].destroy(scene);
+	}
+	items = [];
+
+	osc.dispose();
+	osc = new Tone.OmniOscillator('C4', synthOptions.oscillatorType);
+
+	// repopulate
+	// synthOptions.numberOfNotes = value;
+	for (let i = 0, l = synthOptions.numberOfNotes; i < l; i++) {
+		notes.push( createRandomNote() );
+	}
+	createCubes();
+	createPattern(notes);
+
+	plane.scale.x = synthOptions.numberOfNotes * 2.5;
+
+	const newBpm = Math.min(350, parseInt( synthOptions.numberOfNotes * bpmMultiplier ));
+	synthOptions.bpm = newBpm;
+	Tone.Transport.bpm.value = newBpm;
+
+	osc.start();
+	osc.toMaster();
+}
+
 createMainTheme();
 
 
@@ -483,6 +533,7 @@ document.addEventListener('keyup', (event) => {
 const synthFolder = gui.addFolder('Synth theme');
 
 const isPlayingController = synthFolder.add(synthOptions, 'isPlaying');
+const oscillatorTypeController = synthFolder.add(synthOptions, 'oscillatorType', oscillatorTypes);
 const reverbController = synthFolder.add(synthOptions, 'reverb', 0, 10);
 const numbersOfNotesController = synthFolder.add(synthOptions, 'numberOfNotes', 2, 150, 1);
 const bpmController = synthFolder.add(synthOptions, 'bpm', 90, 800);
@@ -492,7 +543,12 @@ const decayController = synthFolder.add(synthOptions, 'decay', 0.0, 3.0);
 const sustainController = synthFolder.add(synthOptions, 'sustain', 0.0, 3.0);
 const releaseController = synthFolder.add(synthOptions, 'release', 0.0, 3.0);
 
-reverbController.onChange(function(value) {
+oscillatorTypeController.onChange( (value) => {
+	console.log(value)
+	resetMainTheme();
+});
+
+reverbController.onChange( (value) => {
 	reverb.disconnect();
 	reverb.dispose();
 
@@ -502,37 +558,17 @@ reverbController.onChange(function(value) {
 	reverb.toMaster();
 });
 
-numbersOfNotesController.onChange(function(value) {
-	// remove
-	notes = [];
-	pattern.stop();
-	for (let i = 0, l = items.length; i < l; i++) {
-		items[ i ].destroy(scene);
-	}
-	items = [];
-
-	// repopulate
-	synthOptions.numberOfNotes = value;
-	for (let i = 0, l = synthOptions.numberOfNotes; i < l; i++) {
-		notes.push( createRandomNote() );
-	}
-	createCubes();
-	createPattern(notes);
-
-	plane.scale.x = synthOptions.numberOfNotes * 2.5;
-
-	const newBpm = Math.min(350, parseInt( synthOptions.numberOfNotes * 13 ));
-	synthOptions.bpm = newBpm;
-	Tone.Transport.bpm.value = newBpm;
+numbersOfNotesController.onChange( (value) => {
+	resetMainTheme();
 });
 
-bpmController.onChange(function(value) {
+bpmController.onChange( (value) => {
 	Tone.Transport.bpm.value = value;
 });
 bpmController.listen();
 synthFolder.open()
 
-beatController.onChange(function(value) {
+beatController.onChange( (value) => {
 	if (synthOptions.beat) {
 		createBeat();
 	} else {
