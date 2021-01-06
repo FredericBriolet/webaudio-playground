@@ -4,11 +4,14 @@ const synthFolder = gui.addFolder('Synth theme');
 
 const isPlayingController = synthFolder.add(synthOptions, 'isPlaying');
 const oscillatorTypeController = synthFolder.add(synthOptions, 'oscillatorType', oscillatorTypes);
+const modulationTypeController = synthFolder.add(synthOptions, 'modulatorType', modulatorTypes);
+const harmonicityController = synthFolder.add(synthOptions, 'harmonicity', 0, 2);
+const portamentoController = synthFolder.add(synthOptions, 'portamento', 0, 2, 0.1);
 const reverbController = synthFolder.add(synthOptions, 'reverb', 0, 10);
-const numbersOfNotesController = synthFolder.add(synthOptions, 'numberOfNotes', 2, 150, 1);
-const bpmController = synthFolder.add(synthOptions, 'bpm', 90, 800);
+const numbersOfNotesController = synthFolder.add(synthOptions, 'numberOfNotes', 2, 350, 1);
+const bpmController = synthFolder.add(synthOptions, 'bpm', 60, 800);
 const beatController = synthFolder.add(synthOptions, 'beat');
-const attackController = synthFolder.add(synthOptions, 'attack', 0.0, 3.0);
+const attackController = synthFolder.add(synthOptions, 'attack', 0.0, 10.0);
 const decayController = synthFolder.add(synthOptions, 'decay', 0.0, 3.0);
 const sustainController = synthFolder.add(synthOptions, 'sustain', 0.0, 3.0);
 const releaseController = synthFolder.add(synthOptions, 'release', 0.0, 3.0);

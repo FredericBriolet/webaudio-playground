@@ -1,7 +1,7 @@
 // --- main theme ---
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-const numbers = ['3', '4', '5']
+const numbers = ['3', '4']
 const lettersInNumbers = {
 	"C": 0,
 	"D": 1,
